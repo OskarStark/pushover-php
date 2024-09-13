@@ -45,7 +45,7 @@ class MessageClient extends Client implements ClientInterface
     /**
      * Builds array for CURLOPT_POSTFIELDS curl argument.
      *
-     * @return array<string, (null|\CURLFile|string)>
+     * @return array<string, (null|\CURLFile|int|string)>
      */
     public function buildCurlPostFields(Notification $notification): array
     {
@@ -73,11 +73,11 @@ class MessageClient extends Client implements ClientInterface
         }
 
         if (null !== $notification->getMessage()->getPriority()) {
-            $curlPostFields['priority'] = (string) $notification->getMessage()->getPriority()->getPriority();
+            $curlPostFields['priority'] = $notification->getMessage()->getPriority()->getPriority();
 
             if (Priority::EMERGENCY === $notification->getMessage()->getPriority()->getPriority()) {
-                $curlPostFields['retry'] = (string) $notification->getMessage()->getPriority()->getRetry();
-                $curlPostFields['expire'] = (string) $notification->getMessage()->getPriority()->getExpire();
+                $curlPostFields['retry'] = $notification->getMessage()->getPriority()->getRetry();
+                $curlPostFields['expire'] = $notification->getMessage()->getPriority()->getExpire();
 
                 if (null !== $notification->getMessage()->getPriority()->getCallback()) {
                     $curlPostFields['callback'] = $notification->getMessage()->getPriority()->getCallback();
@@ -86,11 +86,11 @@ class MessageClient extends Client implements ClientInterface
         }
 
         if (true === $notification->getMessage()->getIsHtml()) {
-            $curlPostFields['html'] = '1';
+            $curlPostFields['html'] = 1;
         }
 
         if (null !== $notification->getMessage()->getTtl()) {
-            $curlPostFields['ttl'] = (string) $notification->getMessage()->getTtl();
+            $curlPostFields['ttl'] = $notification->getMessage()->getTtl();
         }
 
         if (null !== $notification->getSound()) {
